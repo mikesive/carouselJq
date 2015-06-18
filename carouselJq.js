@@ -40,11 +40,6 @@ var Carousel = function(elem, options){
 Carousel.prototype.setup = function(options){
   $carousel = this.$carousel;
 
-  // Adds buttons to the carousel if set in options
-  if (options != undefined && options.btns == true){
-    this.addBtns();
-  }
-
   // Find the number of slides
   $slides = $carousel.find('.slides');
   max = $slides.find('.slide').length;
@@ -61,6 +56,16 @@ Carousel.prototype.setup = function(options){
     $images.css('width', imgWidth + '%');
     $images.css('float', 'left');
   });
+  // Adds options to the carousel if set
+  if (options != undefined){
+    if (options.btns && options.btns == true){
+      this.addBtns();
+    }
+    if (options.autoplay && !isNaN(options.autoplay)){
+      var t = this;
+      setInterval(function(){t.nextSlide();}, options.autoplay);
+    }
+  }
 }
 
 // A function to go to the specified slide
@@ -102,6 +107,8 @@ Carousel.prototype.nextSlide = function(){
     newSlideNum = 1;
   }
   this.goToSlide(newSlideNum);
+  $carousel.find('.slide-btn').removeClass('active');
+  $($carousel.find('.slide-btn').get(newPos)).addClass('active');
 }
 
 // An function to add the button elements to the carousel
